@@ -27,11 +27,78 @@ print("Welcome to the UW Calculator Playground")
 //: For this latter set of operations, it is safe to assume that `["count"]` (with no additional arguments) is 0, `["avg"]` is also 0, and `["fact"]` is 0. `["1", "fact"]` should return 1, and `["0", "fact"]` should also return 1. (Yes, 0-factorial is 1. True story.)
 //: 
 func calculate(_ args: [String]) -> Int {
-    return -1
+    if args.isEmpty{
+        return 0;
+    }
+    let command = args[args.count-1];
+    let numbers = Array(args[0..<args.count-1]);
+    if numbers.isEmpty{
+        return 0;
+    }
+    switch command {
+        
+    case "count":
+        return numbers.count;
+        
+    case "avg":
+        let count = numbers.count
+        if count == 0 {
+            return 0
+        }
+        var sum = 0
+        for num in numbers {
+            if let value = Int(num) {
+                sum += value
+            }
+        }
+        return sum / count
+        
+    case "fact":
+        if numbers.isEmpty {
+                return 0
+            }
+            if let number = Int(numbers[0]) {
+                if number == 0 || number == 1 {
+                    return 1
+                }
+                var res = 1
+                for i in 1...number {
+                    res *= i
+                }
+                return res
+            }
+            return 0
+    
+    default:
+        guard args.count == 3,
+              let int1 = Int(args[0]),
+              let int2 = Int(args[2])
+        else {
+            return -1
+        }
+        
+        let operation = args[1]
+        
+        switch operation {
+        case "+":
+            return int1 + int2
+        case "-":
+            return int1 - int2
+        case "*":
+            return int1 * int2
+        case "/":
+            return int2 != 0 ? int1 / int2 : -1
+        case "%":
+            return int1 % int2
+        default:
+            return -1
+        }
+    }
 }
 
 func calculate(_ arg: String) -> Int {
-    return -1
+    let cleaned = arg.split(separator: " ").map { String($0) }
+    return calculate(cleaned)
 }
 
 //: Below this are the test expressions/calls to verify if your code is correct.
@@ -85,7 +152,7 @@ calculate("5 fact") == 120
 //: Implement `calculate([String])` and `calculate(String)` to handle negative numbers. You need only make the tests below pass. (You do not need to worry about "fact"/factorial with negative numbers, for example.)
 //:
 //: This is worth 1 pt
-/*
+
 calculate(["2", "+", "-2"]) == 0
 calculate(["2", "-", "-2"]) == 4
 calculate(["2", "*", "-2"]) == -4
@@ -100,7 +167,7 @@ calculate("2 - -2") == 4
 calculate("-2 / 2") == -1
 
 calculate("1 -2 3 -4 5 count") == 5
-*/
+
  
 //: Implement `calculate([String])` and `calculate(String)` to use 
 //: and return floating-point values. You need only make the tests 
@@ -112,12 +179,64 @@ calculate("1 -2 3 -4 5 count") == 5
 //: Integer-based versions above.
 //: 
 //: This is worth 1 pt
-/*
+
 func calculate(_ args: [String]) -> Double {
-    return -1.0
+    if args.isEmpty{
+        return 0;
+    }
+    let command = args[args.count-1];
+    let numbers = Array(args[0..<args.count-1]);
+    if numbers.isEmpty{
+        return 0;
+    }
+    switch command {
+        
+    case "count":
+        return Double(numbers.count);
+        
+    case "avg":
+        let count = numbers.count
+        if count == 0 {
+            return 0.0
+        }
+        var sum = 0.0
+        for num in numbers {
+            if let value = Double(num) {
+                sum += value
+            }
+        }
+        return sum / Double(count)
+        
+    
+    default:
+        guard args.count == 3,
+              let int1 = Double(args[0]),
+              let int2 = Double(args[2])
+        else {
+            return -1
+        }
+        
+        let operation = args[1]
+        
+        switch operation {
+        case "+":
+            return int1 + int2
+        case "-":
+            return int1 - int2
+        case "*":
+            return int1 * int2
+        case "/":
+            return int2 != 0 ? int1 / int2 : -1
+        case "%":
+            return int1.truncatingRemainder(dividingBy: int2)
+        default:
+            return -1
+        }
+    }
 }
 func calculate(_ arg: String) -> Double {
-    return -1.0
+    let cleaned = arg.split(separator: " ").map { String($0) }
+    return calculate(cleaned)
 }
 
 calculate(["2.0", "+", "2.0"]) == 4.0
@@ -127,4 +246,4 @@ calculate(["2.5", "*", "2.5"]) == 6.25
 calculate(["2.0", "/", "2.0"]) == 1.0
 calculate(["2.0", "%", "2.0"]) == 0.0
 calculate("1.0 2.0 3.0 4.0 5.0 count") == 5.0
-*/
+
